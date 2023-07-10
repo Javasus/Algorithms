@@ -9,14 +9,7 @@ public class TreeApp {
     int value;
     String trChoice;
     Tree theTree = new Tree();
-//    theTree.insert(50, 1.2);
-//    theTree.insert(25, 1.3);
-//    theTree.insert(15, 1.4);
-//    theTree.insert(35, 1.5);
-//    theTree.insert(5, 1.6);
-//    theTree.insert(20, 1.7);
-//    theTree.insert(30, 1.8);
-//    theTree.insert(40, 1.9);
+
     theTree.insert(50, 1.1);
     theTree.insert(30, 1.1);
     theTree.insert(20, 1.1);
@@ -55,6 +48,16 @@ public class TreeApp {
       case "max" :
         theTree.maximum();
         break;
+      case "d" :
+        System.out.println("Введите значение для удаления: ");
+        value = getInt();
+        boolean result = theTree.delete(value);
+        System.out.print("\n");
+        if (result) {
+          System.out.println("Узел с введённым значением удалён!");
+        } else {
+          System.out.println("Узел с введённым значение не уделён!");
+        }
       }
     }
   }
@@ -66,14 +69,8 @@ public class TreeApp {
     return st;
   }
 
-  public static char getChar() throws IOException {
-    String s = getString();
-    return s.charAt(0);
-  }
-
   public static int getInt() throws IOException {
     String str = getString();
     return Integer.parseInt(str);
   }
-
 }

@@ -59,12 +59,85 @@ public class Tree {
 
   // Delete node
   public boolean delete (int key) {
+    Node current = root;
+    Node parent = root;
+    boolean isLeftChild = true;
+//    Ищём нужный узел
+    while (current.iData != key) {
+      parent = current;
+      if (key < current.iData) {
+        isLeftChild = true;
+        current = current.leftChild;
+      } else {
+        isLeftChild = false;
+        current = current.rightChild;
+      }
+      if (current == null) {
+        System.out.println("Узел не найден.");
+        return false;
+      }
+    }
+//    Если у  узла нет потомков он просто удаляется.
+    if (current.leftChild == null && current.rightChild == null) {
+      if (current == root) {
+        root = null;
+      } else if (isLeftChild) {
+        parent.leftChild = null;
+      } else {
+        parent.rightChild = null;
+      }
+//    Если нет правого потомка, то узел заменяется левым поддеревом.
+    } else if (current.rightChild == null) {
+      if (current == root) {
+        root = current.leftChild;
+      } else if (isLeftChild) {
+        parent.leftChild = current.leftChild;
+      } else {
+        parent.rightChild = current.leftChild;
+      }
+//    Если нет левого потомка, то узел заменяется правым поддеревом.
+    } else if (current.leftChild == null) {
+      if (current == root) {
+        root = current.rightChild;
+      } else if (isLeftChild) {
+        parent.leftChild = current.rightChild;
+      } else {
+        parent.rightChild = current.rightChild;
+      }
+//    Если у узла есть и правый и левый потомок узел заменется приемником
+    } else {
+//    Поиск приемника с помощью метода getSuccessor().
+      Node successor = getSuccessor(current);
+//    Родитель связывается с посредником.
+      if (current == root) {
+        root = successor;
+      } else if (isLeftChild) {
+        parent.leftChild = successor;
+      } else {
+        parent.rightChild = successor;
+      }
+//    Приемник связывается с левым потомком current.
+    }
     return true;
   }
 
-  // Return next node when delete node with children
+//  метод возвращает узел со следующим значением после delNode.
+//  Для этого он сначала переходит к правому потомку,
+//  а затем отслеживает цепочку левых потомков этого узла.
   private Node getSuccessor (Node delNode) {
-    return new Node();
+    Node successorParent = delNode;
+    Node successor = delNode;
+    Node current = delNode.rightChild;
+    while (current != null) {
+      successorParent = successor;
+      successor = current;
+      current = current.leftChild;
+    }
+    if (successor != delNode.rightChild) {
+      successorParent.leftChild = successor.rightChild;
+      successor.rightChild = delNode.rightChild;
+    }
+    return successor;
   }
 
   public void minimum () {
@@ -84,7 +157,6 @@ public class Tree {
       last = current;
       current = current.rightChild;
     }
-
     System.out.println(last.iData);
   }
 
@@ -170,5 +242,4 @@ public class Tree {
     }
     System.out.println("................................................................");
   }
-
 }
